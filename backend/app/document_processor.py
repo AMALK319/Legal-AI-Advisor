@@ -35,7 +35,7 @@ class DocumentProcessor:
             self.client.create_collection(
                 collection_name=self.collection_name,
                 vectors_config=VectorParams(
-                    size=4096, 
+                    size=768, 
                     distance=Distance.COSINE  
                 )
             )

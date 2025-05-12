@@ -6,11 +6,11 @@ const Chat = lazy(() => import('./pages/Public/Chat'));
 
 export const routes: RouteObject[] = [
     {
-        path: "/Admin/upload",
+        path: "/admin/upload",
         element: <DocumentUploader/>
     },
     {
-        path: "/",
+        path: "/chat",
         element: <Chat/>
     }
 ]

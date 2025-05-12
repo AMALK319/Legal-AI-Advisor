@@ -5,7 +5,11 @@ from app.config import settings
 
 class ChatEngine:
     def __init__(self):
-      self.llm = ChatOllama(model="llama2", temperature=1.5, presence_penalty=0.1) 
+      self.llm = ChatOllama(
+         base_url=settings.OLLAMA_HOST,
+         model="llama2:7b", 
+         temperature=1.5, 
+         presence_penalty=0.1) 
       self.system_message = SystemMessage(
         "You are a trusted legal assistant for moroccan law that answers based on context and conversation history."
       ) 

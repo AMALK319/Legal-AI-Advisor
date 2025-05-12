@@ -1,48 +1,21 @@
-import { useRef, useState } from "react";
-import "../../styles/DocumentUploader.css";
+import { useState } from "react";
 import axios from "axios";
+
+import ProgressBar from '../../components/progress-bar/ProgressBar.tsx';
+import UploadCard from "../../components/upload-card/UploadCard.tsx";
+import ActionsBox from "../../components/actions-box/ActionsBox.tsx";
+
+import "../../styles/DocumentUploader.css";
+import FilesList from "../../components/files-list/FilesList.tsx";
+
 
 
 function DocumentUploader() {
   const [files, setFiles] = useState<File[]>([]);
-  const [isDragging, setIsDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadStatus, setUploadStatus] = useState<
-    "idle" | "uploading" | "success" | "error"
-  >("idle");
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadStatus, setUploadStatus] = useState<"idle" | "uploading" | "success" | "error">("idle");
 
-  // Handle file selection
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFiles(Array.from(e.target.files));
-    }
-  };
 
-  // Handle drag and drop
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-    if (e.dataTransfer.files) {
-      setFiles(Array.from(e.dataTransfer.files));
-    }
-  };
-
-  // Trigger file input
-  const handleSelectClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  // Upload files to backend
   const handleUpload = async () => {
     if (files.length === 0) return;
 
@@ -76,11 +49,9 @@ function DocumentUploader() {
     }
   };
 
-  const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
-  };
+  
 
-  // Cancel upload
+ 
   const handleCancel = () => {
     setFiles([]);
     setUploadStatus("idle");
@@ -89,92 +60,21 @@ function DocumentUploader() {
 
   return (
     <>
-      <div
-        className={`upload-box flex ${isDragging ? "dragging" : ""}`}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        onClick={handleSelectClick}
-      >
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          multiple
-          accept=".pdf"
-          style={{ display: "none" }}
-        />
-        <img
-          className="upload-box-img"
-          src="../../../public/upload-image.png"
-          alt="upload-image"
-        />
-        <p className="upload-box-text">
-          {files.length > 0
-            ? `${files.length} file(s) selected`
-            : "Select a folder or drop and drag here"}
-        </p>
-        <button
-          className="upload-box-btn btn-light"
-          onClick={(e) => e.stopPropagation()}
-        >
-          Select File
-        </button>
-      </div>
-      {/* File list preview */}
-      {files.length > 0 && (
-        <div className="file-list">
-          {files.map((file, index) => (
-            <div key={index} className="file-item">
-              <span>{file.name}</span>
-              <span className="file-size">
-                {(file.size / (1024 * 1024)).toFixed(2)} MB
-              </span>
-              <button onClick={() => removeFile(index)} className="remove-btn">
-                &times;
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-      {/* Progress bar */}
-      {uploadStatus === "uploading" && (
-        <div className="progress-container">
-          <div
-            className="progress-bar"
-            style={{ width: `${uploadProgress}%` }}
-          ></div>
-          <span>{uploadProgress}%</span>
-        </div>
-      )}
+      <UploadCard files={files} setFiles={setFiles}/>
 
-      {/* Status messages */}
-      {uploadStatus === "success" && (
-        <div className="status-message success">
-          Files uploaded successfully!
-        </div>
-      )}
-      {uploadStatus === "error" && (
-        <div className="status-message error">
-          Upload failed. Please try again.
-        </div>
-      )}
-      <div className="actions-box">
-        <button
-          className="actions-btn btn-light btn-sm"
-          onClick={handleCancel}
-          disabled={uploadStatus === "uploading"}
-        >
-          Cancel
-        </button>
-        <button
-          className="actions-btn btn-dark btn-sm"
-          onClick={handleUpload}
-          disabled={files.length === 0 || uploadStatus === "uploading"}
-        >
-          {uploadStatus === "uploading" ? "Uploading..." : "Upload"}
-        </button>
-      </div>
+      <FilesList files={files} setFiles={setFiles}/>
+  
+      {uploadStatus === "uploading" && <ProgressBar uploadProgress={uploadProgress}/>}
+      
+      {uploadStatus === "success" && ( <div className="status-message success">Files uploaded successfully!</div>)}
+      {uploadStatus === "error" && ( <div className="status-message error">Upload failed. Please try again.</div> )}
+
+      <ActionsBox 
+        cancelDisabled={uploadStatus === "uploading"} 
+        actionDisabled={files.length === 0 || uploadStatus === "uploading"}
+        cancelAction={handleCancel}
+        handleAction={handleUpload}
+        actionLabel={uploadStatus === "uploading" ? "Uploading..." : "Upload"}/>
     </>
   );
 }

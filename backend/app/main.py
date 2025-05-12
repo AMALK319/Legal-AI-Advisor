@@ -127,7 +127,7 @@ logger = logging.getLogger(__name__)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",  # React
+        "http://localhost:5173",  # should be an env var
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE"],

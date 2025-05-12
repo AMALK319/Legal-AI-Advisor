@@ -12,7 +12,8 @@ class Settings(BaseSettings):
     QDRANT_API_KEY: str = Field("", alias="QDRANT_API_KEY")
     QDRANT_COLLECTION: str = Field("", alias="QDRANT_COLLECTION")
 
-    EMBEDDING_MODEL: str = Field("llama2", alias="EMBEDDING_MODEL")
+    OLLAMA_HOST: str = Field(..., alias="OLLAMA_HOST")
+    EMBEDDING_MODEL: str = Field("nomic-embed-text", alias="EMBEDDING_MODEL")
     OPENAI_API_KEY: str = Field("", alias="OPENAI_API_KEY")
 
     class Config:
