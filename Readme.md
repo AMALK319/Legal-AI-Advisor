@@ -1,4 +1,4 @@
-# 🇲🇦 Moroccan Legal RAG Assistant
+# 🇲🇦 Moroccan Legal AI Advisor
 *A legal AI assistant powered by Retrieval-Augmented Generation*
 
 ## Features
