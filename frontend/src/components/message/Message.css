@@ -1,0 +1,14 @@
+
+.user-message{
+    border-radius: 10px;
+    padding: 10px 15px;
+    background-color: var(--softBlue);
+    min-width: 30em;
+    max-width: 30em;
+}
+
+.system-message{
+    min-width: 100%;
+    max-width: 100%;
+    
+}
